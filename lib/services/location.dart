@@ -1,29 +1,37 @@
 import 'package:geolocator/geolocator.dart';
 
+const String TAG = "location.dart";
+
 class Location {
-  double _Latitude;
-  double _Longitude;
+  double Latitude;
+  double Longitude;
   List<Placemark> _MarkerPositions;
 
-  Location(this._Latitude, this._Longitude);
+  Location();
 
-  set Latitude(double value) {
-    _Latitude = value;
-  }
+//  set Latitude(double value) {
+//    _Latitude = value;
+//  }
+//
+//  set Longitude(double value) {
+//    _Longitude = value;
+//  }
 
-  set Longitude(double value) {
-    _Longitude = value;
-  }
-
-  void getLocation() async {
-    Position position = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    print(position);
+  Future<void> getLocation() async {
+    try {
+      Position position = await Geolocator()
+          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      Latitude = position.latitude;
+      Longitude = position.longitude;
+      print("{$TAG : Latitude = $Latitude , Longitude: $Longitude}");
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<List<Placemark>> getMarkerPositions() async {
     _MarkerPositions = await Geolocator().placemarkFromCoordinates(
-        _Latitude ?? 37.4219983, _Longitude ?? -122.084);
+        Latitude ?? 37.4219983, Longitude ?? -122.084);
     return _MarkerPositions;
   }
 }
